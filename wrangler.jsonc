@@ -1,0 +1,9 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "scrov-bot",
+	"main": "src/index.ts",
+	"compatibility_date": "2025-10-08",
+	"observability": { "enabled": true }
+	// Secrets (set with `wrangler secret put <NAME>`):
+	//   DISCORD_PUBLIC_KEY  verifies that requests really come from Discord
+}
