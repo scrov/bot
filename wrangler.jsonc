@@ -1,6 +1,6 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "scrov-bot",
+	"name": "bot",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-10-08",
 	"observability": { "enabled": true }
