@@ -13,22 +13,26 @@ permissions:
 
 jobs:
   check:
-    name: Typecheck & Test
+    name: Lint, Test & Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 22
+          cache: npm
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: npm ci
 
-      - name: Typecheck and test
-        run: bun run check
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
 
       - name: Build the Worker
-        run: bunx wrangler deploy --dry-run
+        run: npx wrangler deploy --dry-run
