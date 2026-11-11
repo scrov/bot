@@ -8,7 +8,14 @@ import {
   InteractionType,
   verifyKey,
 } from 'discord-interactions';
-import { AWW_COMMAND, INVITE_COMMAND } from './commands.js';
+import {
+  ALL_COMMANDS,
+  AWW_COMMAND,
+  HELP_COMMAND,
+  INVITE_COMMAND,
+  PING_COMMAND,
+  SCROV_COMMAND,
+} from './commands.js';
 import { getCuteUrl } from './reddit.js';
 import { InteractionResponseFlags } from 'discord-interactions';
 
@@ -74,6 +81,37 @@ router.post('/', async (request, env) => {
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
             content: INVITE_URL,
+            flags: InteractionResponseFlags.EPHEMERAL,
+          },
+        });
+      }
+      case PING_COMMAND.name.toLowerCase(): {
+        return new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: 'pong',
+          },
+        });
+      }
+      case SCROV_COMMAND.name.toLowerCase(): {
+        return new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: [
+              '**scrov** — a terminal-style portfolio and blog',
+              'Site: <https://scrov.app>',
+              'Source: <https://github.com/scrov/scrov>',
+            ].join('\n'),
+          },
+        });
+      }
+      case HELP_COMMAND.name.toLowerCase(): {
+        return new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: ALL_COMMANDS.map(
+              (command) => `\`/${command.name}\` — ${command.description}`,
+            ).join('\n'),
             flags: InteractionResponseFlags.EPHEMERAL,
           },
         });

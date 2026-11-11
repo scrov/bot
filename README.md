@@ -111,24 +111,15 @@ This is the process we'll use for local testing and development. When you've pub
 
 ## Deploying app
 
-This repository is set up to automatically deploy to Cloudflare Workers when new changes land on the `main` branch. To deploy manually, run `npm run publish`, which uses the `wrangler publish` command under the hood. Publishing via a GitHub Action requires obtaining an [API Token and your Account ID from Cloudflare](https://developers.cloudflare.com/workers/wrangler/cli-wrangler/authentication/#generate-tokens). These are stored [as secrets in the GitHub repository](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository), making them available to GitHub Actions. The following configuration in `.github/workflows/ci.yaml` demonstrates how to tie it all together:
+Pushing to `main` deploys the Worker (named `bot` in `wrangler.toml`) through the
+`Deploy` workflow in `.github/workflows/deploy.yml`. It needs two
+[repository secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository):
 
-```yaml
-release:
-  if: github.ref == 'refs/heads/main'
-  runs-on: ubuntu-latest
-  needs: [test, lint]
-  steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 18
-    - run: npm install
-    - run: npm run publish
-      env:
-        CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-        CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
-```
+- `CLOUDFLARE_API_TOKEN` — an API token created from the "Edit Cloudflare Workers" template
+- `CLOUDFLARE_ACCOUNT_ID` — the account that owns the Worker
+
+The workflow can also be started by hand from the Actions tab. To deploy from
+your machine instead, run `npm run publish`.
 
 ### Storing secrets
 

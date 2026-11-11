@@ -5,7 +5,14 @@ import {
   InteractionType,
   InteractionResponseFlags,
 } from 'discord-interactions';
-import { AWW_COMMAND, INVITE_COMMAND } from '../src/commands.js';
+import {
+  ALL_COMMANDS,
+  AWW_COMMAND,
+  HELP_COMMAND,
+  INVITE_COMMAND,
+  PING_COMMAND,
+  SCROV_COMMAND,
+} from '../src/commands.js';
 import sinon from 'sinon';
 import server from '../src/server.js';
 import { redditUrl } from '../src/reddit.js';
@@ -128,6 +135,43 @@ describe('Server', () => {
       expect(body.data.content).to.include(
         'https://discord.com/oauth2/authorize?client_id=123456789&scope=applications.commands',
       );
+      expect(body.data.flags).to.equal(InteractionResponseFlags.EPHEMERAL);
+    });
+
+    const runCommand = async (command) => {
+      verifyDiscordRequestStub.resolves({
+        isValid: true,
+        interaction: {
+          type: InteractionType.APPLICATION_COMMAND,
+          data: { name: command.name },
+        },
+      });
+      const request = {
+        method: 'POST',
+        url: new URL('/', 'http://discordo.example'),
+      };
+      const response = await server.fetch(request, {});
+      return response.json();
+    };
+
+    it('should handle a ping command interaction', async () => {
+      const body = await runCommand(PING_COMMAND);
+      expect(body.type).to.equal(
+        InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+      );
+      expect(body.data.content).to.equal('pong');
+    });
+
+    it('should handle a scrov command interaction', async () => {
+      const body = await runCommand(SCROV_COMMAND);
+      expect(body.data.content).to.include('https://scrov.app');
+    });
+
+    it('should handle a help command interaction', async () => {
+      const body = await runCommand(HELP_COMMAND);
+      for (const command of ALL_COMMANDS) {
+        expect(body.data.content).to.include(`/${command.name}`);
+      }
       expect(body.data.flags).to.equal(InteractionResponseFlags.EPHEMERAL);
     });
 
