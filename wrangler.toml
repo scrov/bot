@@ -1,8 +1,38 @@
 name = "bot"
-main = "./src/server.js"
-compatibility_date="2023-05-18"
+main = "./src/index.js"
+compatibility_date = "2025-04-01"
 
-# [secrets]
+# Bundles the Activity's front end (client/) into public/assets/app.js.
+[build]
+command = "npm run build:client"
+# Source directories only: the build writes into public/, and watching that
+# would rebuild forever.
+watch_dir = ["client", "src"]
+
+# public/ holds the Activity: index.html is what Discord loads at the root
+# address. Every request reaches the Worker first, because the root address
+# also receives Discord's interactions as POST requests; the Worker hands
+# everything that is not an interaction or an API call to these files.
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = true
+
+# One Durable Object per Discord user holds that user's saved items in its
+# own SQLite database.
+[[durable_objects.bindings]]
+name = "USER_STORE"
+class_name = "UserStore"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["UserStore"]
+
+[observability]
+enabled = true
+
+# Secrets, set with `npx wrangler secret put <NAME>`:
 # DISCORD_TOKEN
 # DISCORD_PUBLIC_KEY
 # DISCORD_APPLICATION_ID
+# DISCORD_CLIENT_SECRET   (OAuth2 client secret; signs the Activity in)

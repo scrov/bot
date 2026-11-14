@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <title>scrov notebook</title>
+    <!-- Relative addresses: inside Discord this page is served through a proxy. -->
+    <link rel="stylesheet" href="app.css" />
+    <script type="module" src="assets/app.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <p class="brand"><span aria-hidden="true">~/</span>notebook</p>
+        <nav id="kinds" class="kinds" aria-label="Sections"></nav>
+        <p id="status" class="status" role="status">Connecting…</p>
+      </aside>
+
+      <main class="main">
+        <header class="toolbar">
+          <h1 id="heading"></h1>
+          <input
+            type="search"
+            id="search"
+            placeholder="Search"
+            aria-label="Search this section"
+            autocomplete="off"
+          />
+          <button type="button" id="new" class="primary"></button>
+        </header>
+
+        <p id="hint" class="hint"></p>
+
+        <form id="capture" class="capture" hidden>
+          <label class="visually-hidden" for="capture-text">New clip</label>
+          <textarea
+            id="capture-text"
+            rows="2"
+            placeholder="Type or paste something to keep, then press Ctrl+Enter"
+            spellcheck="false"
+          ></textarea>
+          <div class="capture-actions">
+            <button type="button" id="capture-paste" hidden>
+              Paste from clipboard
+            </button>
+            <button type="submit" class="primary">Save clip</button>
+          </div>
+        </form>
+
+        <ul id="items" class="items"></ul>
+        <p id="empty" class="empty" hidden></p>
+      </main>
+    </div>
+
+    <dialog id="editor" aria-labelledby="editor-title">
+      <form id="editor-form">
+        <h2 id="editor-title"></h2>
+        <label>
+          <span>Title</span>
+          <input name="title" maxlength="100" autocomplete="off" />
+        </label>
+        <label id="editor-lang">
+          <span>Language</span>
+          <input
+            name="lang"
+            maxlength="30"
+            placeholder="js, python, bash…"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </label>
+        <label>
+          <span>Text</span>
+          <textarea
+            name="body"
+            rows="12"
+            required
+            spellcheck="false"
+          ></textarea>
+        </label>
+        <p id="editor-hint" class="hint"></p>
+        <p id="editor-error" class="error" role="alert" hidden></p>
+        <div class="dialog-actions">
+          <button type="button" id="editor-cancel">Cancel</button>
+          <button type="submit" class="primary">Save</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="runner" aria-labelledby="runner-title">
+      <form id="runner-form">
+        <h2 id="runner-title"></h2>
+        <div id="runner-fields" class="runner-fields"></div>
+        <label>
+          <span>Result</span>
+          <textarea id="runner-output" rows="8" readonly></textarea>
+        </label>
+        <div class="dialog-actions">
+          <button type="button" id="runner-close">Close</button>
+          <button type="submit" class="primary">Copy result</button>
+        </div>
+      </form>
+    </dialog>
+
+    <p id="toast" class="toast" role="status" aria-live="polite" hidden></p>
+
+    <noscript>
+      <p class="empty">This app needs JavaScript to run.</p>
+    </noscript>
+  </body>
+</html>

@@ -2,3 +2,5 @@ node_modules
 .dev.vars
 .wrangler
 coverage
+# built by `npm run build:client`
+public/assets

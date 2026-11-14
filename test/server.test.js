@@ -18,18 +18,28 @@ import server from '../src/server.js';
 import { redditUrl } from '../src/reddit.js';
 
 describe('Server', () => {
+  // The AWW test leaves `fetch` stubbed; nothing may leak into other tests.
+  afterEach(() => sinon.restore());
+
   describe('GET /', () => {
-    it('should return a greeting message with the Discord application ID', async () => {
+    it("should serve the Activity's page from public/", async () => {
       const request = {
         method: 'GET',
         url: new URL('/', 'http://discordo.example'),
       };
-      const env = { DISCORD_APPLICATION_ID: '123456789' };
+      // Like the real binding, this one insists on a genuine Request.
+      const env = {
+        ASSETS: {
+          fetch: async (asset) =>
+            asset instanceof Request && new URL(asset.url).pathname === '/'
+              ? new Response('<title>notebook</title>')
+              : new Response('not a request', { status: 500 }),
+        },
+      };
 
       const response = await server.fetch(request, env);
-      const body = await response.text();
 
-      expect(body).to.equal('👋 123456789');
+      expect(await response.text()).to.equal('<title>notebook</title>');
     });
   });
 
