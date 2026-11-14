@@ -28,13 +28,48 @@ if (!applicationId) {
  */
 const url = `https://discord.com/api/v10/applications/${applicationId}/commands`;
 
+const headers = {
+  'Content-Type': 'application/json',
+  Authorization: `Bot ${token}`,
+};
+
+/**
+ * The Entry Point command is what opens the Activity from Discord's App
+ * Launcher. Discord creates it when Activities are turned on for the app, and
+ * refuses a bulk update that would remove it, so an existing one is sent back
+ * unchanged along with our own commands.
+ */
+const ENTRY_POINT = 4;
+const existing = await fetch(url, { headers });
+const entryPoints = existing.ok
+  ? (await existing.json()).filter((command) => command.type === ENTRY_POINT)
+  : [];
+
 const response = await fetch(url, {
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: `Bot ${token}`,
-  },
+  headers,
   method: 'PUT',
-  body: JSON.stringify(ALL_COMMANDS),
+  body: JSON.stringify([
+    ...ALL_COMMANDS,
+    ...entryPoints.map(
+      ({
+        id,
+        name,
+        description,
+        type,
+        handler,
+        integration_types,
+        contexts,
+      }) => ({
+        id,
+        name,
+        description,
+        type,
+        handler,
+        integration_types,
+        contexts,
+      }),
+    ),
+  ]),
 });
 
 if (response.ok) {

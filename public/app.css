@@ -1,0 +1,472 @@
+/* The Activity's styles. Dark by default, as Discord is; light when asked. */
+
+:root {
+  --bg: #16171a;
+  --panel: #1e2024;
+  --raised: #272a30;
+  --border: #353941;
+  --text: #e4e6ea;
+  --muted: #9ba1ac;
+  --accent: #8794ff;
+  --accent-text: #11131f;
+  --danger: #ff7682;
+  --focus: #b9c1ff;
+  --mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+    sans-serif;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f4f5f7;
+    --panel: #ffffff;
+    --raised: #eef0f3;
+    --border: #d8dce3;
+    --text: #1b1d21;
+    --muted: #5b6270;
+    --accent: #3f4bd8;
+    --accent-text: #ffffff;
+    --danger: #c22a38;
+    --focus: #3f4bd8;
+    color-scheme: light;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.45 var(--sans);
+}
+
+h1,
+h2,
+p,
+ul {
+  margin: 0;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* The rules below set `display`, which would otherwise undo `hidden`. */
+[hidden] {
+  display: none !important;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Layout ---------------------------------------------------------------- */
+
+.app {
+  display: grid;
+  grid-template-columns: 208px minmax(0, 1fr);
+  height: 100%;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 12px;
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+}
+
+.brand {
+  padding: 0 8px;
+  font: 600 15px/1.2 var(--mono);
+}
+
+.brand span {
+  color: var(--accent);
+}
+
+.kinds {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.kinds button {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.kinds button:hover {
+  background: var(--raised);
+}
+
+.kinds button[aria-current='page'] {
+  background: var(--raised);
+  box-shadow: inset 2px 0 0 var(--accent);
+  font-weight: 600;
+}
+
+.kinds .count {
+  color: var(--muted);
+  font: 12px var(--mono);
+}
+
+.status {
+  margin-top: auto;
+  padding: 0 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px 20px 24px;
+  overflow-y: auto;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toolbar h1 {
+  margin-right: auto;
+  font-size: 18px;
+  font-weight: 650;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Controls -------------------------------------------------------------- */
+
+button {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--raised);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+button:hover {
+  border-color: var(--muted);
+}
+
+button.primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+button.primary:hover {
+  filter: brightness(1.08);
+}
+
+button.danger {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+button[aria-pressed='true'] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+}
+
+textarea {
+  display: block;
+  resize: vertical;
+  font: 13px/1.5 var(--mono);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted);
+}
+
+#search {
+  width: min(240px, 40vw);
+}
+
+/* Quick capture --------------------------------------------------------- */
+
+.capture {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.capture-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Items ----------------------------------------------------------------- */
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.item.pinned {
+  border-left: 3px solid var(--accent);
+}
+
+.item-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.item-title {
+  margin-right: auto;
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-meta {
+  color: var(--muted);
+  font: 12px var(--mono);
+  white-space: nowrap;
+}
+
+.item-body {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  margin: 0;
+  color: var(--muted);
+  font: 13px/1.5 var(--mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.item.note .item-body,
+.item.clip .item-body {
+  font-family: var(--sans);
+}
+
+.item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.item-actions button {
+  padding: 4px 10px;
+  font-size: 13px;
+}
+
+.item-actions .spacer {
+  flex: 1;
+}
+
+.empty {
+  padding: 32px 0;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* Dialogs --------------------------------------------------------------- */
+
+dialog {
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--text);
+}
+
+dialog::backdrop {
+  background: rgb(0 0 0 / 55%);
+}
+
+dialog form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+}
+
+dialog h2 {
+  font-size: 16px;
+}
+
+dialog label,
+.runner-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.runner-fields {
+  gap: 12px;
+}
+
+dialog label span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.error {
+  color: var(--danger);
+}
+
+/* Toast ----------------------------------------------------------------- */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  max-width: calc(100vw - 32px);
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--raised);
+  box-shadow: 0 6px 24px rgb(0 0 0 / 35%);
+  transform: translateX(-50%);
+}
+
+.toast.failed {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* Narrow screens: sections become a row of tabs ------------------------- */
+
+@media (max-width: 640px) {
+  .app {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .sidebar {
+    gap: 8px;
+    padding: 10px 12px;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+    overflow: visible;
+  }
+
+  .kinds {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .kinds button {
+    width: auto;
+    flex: none;
+  }
+
+  .kinds button[aria-current='page'] {
+    box-shadow: inset 0 -2px 0 var(--accent);
+  }
+
+  .status {
+    margin-top: 0;
+  }
+
+  .main {
+    padding: 12px 12px 20px;
+  }
+
+  .toolbar {
+    flex-wrap: wrap;
+  }
+
+  #search {
+    order: 3;
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .toast {
+    animation: rise 0.16s ease-out;
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translate(-50%, 6px);
+    }
+  }
+}
